@@ -92,7 +92,7 @@ export class KHR_mesh_instancing implements IGLTFLoaderExtension {
                                         instance.setParent(babylonMeshPrimitive);
                                         translationBuffer ? Vector3.FromArrayToRef(translationBuffer, i * 3, instance.position)
                                             : instance.position.set(0, 0, 0);
-                                        rotationBuffer ? Quaternion.FromArrayToRef(rotationBuffer, i * 4, instance.rotationQuaternion!)
+                                        rotationBuffer ? Quaternion.FromEulerAnglesToRef(rotationBuffer[i*3], rotationBuffer[i*3+1], rotationBuffer[i*3+2], instance.rotationQuaternion!)//Quaternion.FromArrayToRef(rotationBuffer, i * 4, instance.rotationQuaternion!)
                                             : instance.rotationQuaternion!.set(0, 0, 0, 1);
                                         scaleBuffer ? Vector3.FromArrayToRef(scaleBuffer, i * 3, instance.scaling)
                                             : instance.scaling.set(1, 1, 1);
