@@ -1,4 +1,5 @@
 import { Node } from "babylonjs/node";
+import { Material } from "babylonjs/Materials/material";
 import { Scene } from "babylonjs/scene";
 import { GLTFData } from "./glTFData";
 import { _Exporter } from "./glTFExporter";
@@ -13,6 +14,13 @@ export interface IExportOptions {
      * @returns boolean, which indicates whether the node should be exported (true) or not (false)
      */
     shouldExportNode?(node: Node): boolean;
+
+    /**
+     * Function which indicates whether a babylon material should be exported or not
+     * @param material source Babylon material. It is used to check whether it should be exported to glTF or not
+     * @returns boolean, which indicates whether the node should be exported (true) or not (false
+     */
+    shouldExportMaterial?(material: Material): boolean;
 
     /**
      * Function used to extract the part of node's metadata that will be exported into glTF node extras
