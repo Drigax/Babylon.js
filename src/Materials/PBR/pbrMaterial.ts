@@ -8,6 +8,7 @@ import { ColorCurves } from "../../Materials/colorCurves";
 import { BaseTexture } from "../../Materials/Textures/baseTexture";
 import { PBRBaseMaterial } from "./pbrBaseMaterial";
 import { _TypeStore } from '../../Misc/typeStore';
+import { PBRSpecularGlossinessMaterial } from "../../Legacy/legacy";
 
 /**
  * The Physically based material of BJS.
@@ -761,6 +762,39 @@ export class PBRMaterial extends PBRBaseMaterial {
         this.subSurface.copyTo(clone.subSurface);
 
         return clone;
+    }
+
+    public static FromPBRSpecularGlossinessMaterial(source: PBRSpecularGlossinessMaterial, newName: string = ""): PBRMaterial {
+        const material = <PBRMaterial>SerializationHelper.Clone(() => new PBRMaterial(newName !== "" ? newName : source.name, source.getScene()), source as PBRBaseMaterial);
+
+        // PBRMetallicRoughness properties
+        source.clearCoat.copyTo(material.clearCoat);
+        source.anisotropy.copyTo(material.anisotropy);
+        source.brdf.copyTo(material.brdf);
+        source.sheen.copyTo(material.sheen);
+        source.subSurface.copyTo(material.subSurface);
+
+        // PBRBaseSimpleMaterial properties
+        material.albedoColor = source.diffuseColor;
+        material.albedoTexture = source.diffuseTexture;
+        material.reflectivityColor = source.specularColor;
+        material.microSurface = source.glossiness;
+        material.microSurfaceTexture = source.specularGlossinessTexture;
+        material.maxSimultaneousLights = source.maxSimultaneousLights;
+        material.disableLighting = source.disableLighting;
+        material.environmentBRDFTexture = source.environmentTexture;
+        material.invertNormalMapX = source.invertNormalMapX;
+        material.invertNormalMapY = source.invertNormalMapY;
+
+        //material.normalTexture = source.normalTexture;
+        material.emissiveColor = source.emissiveColor;
+        material.emissiveTexture = source.emissiveTexture;
+        material.ambientTexture = source.occlusionTexture;
+        //material.ambientColor = source.occlusion
+
+
+
+        return material;
     }
 
     /**

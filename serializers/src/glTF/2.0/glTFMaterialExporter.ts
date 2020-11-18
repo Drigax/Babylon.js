@@ -18,6 +18,7 @@ import { Scene } from "babylonjs/scene";
 
 import { _Exporter } from "./glTFExporter";
 import { Constants } from 'babylonjs/Engines/constants';
+import { PBRSpecularGlossinessMaterial } from "babylonjs";
 
 /**
  * Interface for storing specular glossiness factors
@@ -130,6 +131,9 @@ export class _GLTFMaterialExporter {
             }
             else if (babylonMaterial instanceof PBRMetallicRoughnessMaterial) {
                 promises.push(this._convertPBRMetallicRoughnessMaterialAsync(babylonMaterial, mimeType, hasTextureCoords));
+            }
+            else if (babylonMaterial instanceof PBRSpecularGlossinessMaterial) {
+                promises.push(this._convertPBRSpecularGlossinessMaterialAsync(babylonMaterial, mimeType, hasTextureCoords));
             }
             else if (babylonMaterial instanceof PBRMaterial) {
                 promises.push(this._convertPBRMaterialAsync(babylonMaterial, mimeType, hasTextureCoords));
@@ -481,6 +485,14 @@ export class _GLTFMaterialExporter {
         materialMap[babylonPBRMetalRoughMaterial.uniqueId] = materials.length - 1;
 
         return this._finishMaterial(promises, glTFMaterial, babylonPBRMetalRoughMaterial, mimeType);
+    }
+
+    public _convertPBRSpecularGlossinessMaterialAsync(babylonPBRSpecGlossMaterial: PBRSpecularGlossinessMaterial, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<IMaterial> {
+        const babylonPBRMaterial = new PBRMaterial(babylonPBRSpecGlossMaterial.name, babylonPBRSpecGlossMaterial.getScene());//PBRMaterial.FromPBRSpecularGlossinessMaterial(babylonPBRSpecGlossMaterial);
+        return this._convertPBRMaterialAsync(babylonPBRMaterial, mimeType, hasTextureCoords).then((material) => {
+            babylonPBRMaterial.dispose();
+            return material;
+        });
     }
 
     /**
